@@ -32,7 +32,7 @@ Track every application, interview and follow-up in one place — so no opportun
 
 ## Overview
 
-CareerFlow is a job-application tracker for job seekers. This repository contains the **web frontend**, built with Next.js 16 and the App Router. It connects to the **CareerFlow backend** (Express, Prisma, PostgreSQL), which provides JWT authentication and REST APIs for auth, profiles and applications.
+CareerFlow is a job-application tracker for job seekers. This repository contains the **web frontend**, built with Next.js 16 and the App Router. It connects to the **CareerFlow backend** (Express, Prisma, PostgreSQL), which provides JWT authentication and REST APIs for auth, profiles, applications and tasks.
 
 ## Features
 
@@ -44,7 +44,9 @@ CareerFlow is a job-application tracker for job seekers. This repository contain
 | **Pipeline**         | Track each application as **Pending**, **Interview**, **Accepted** or **Rejected**                                 |
 | **Follow-ups**       | Record when you applied and when to follow up                                                                      |
 | **Dashboard**        | See per-status counts at a glance, filter by status and search by company or position                              |
+| **Tasks**            | Add to-dos with a deadline, edit or delete them, and move them through **To do → In review → Done**; see overdue and on-time stats |
 | **Profile**          | Manage your bio, avatar, contact details and portfolio, LinkedIn and GitHub links                                  |
+| **Account menu**     | Open Profile, Settings and Log out from the dropdown under your name |
 | **Account settings** | Update your name, or change your email (confirmed with your current password)                                      |
 
 ## Tech Stack
@@ -135,9 +137,10 @@ careerflow-frontend/
 │   ├── (app)/                # Signed-in area with shared navigation
 │   │   ├── dashboard/
 │   │   ├── applications/     # new, [id], [id]/edit
+│   │   ├── tasks/
 │   │   ├── profile/
 │   │   └── settings/
-│   └── actions/              # Server Actions: auth, applications, profile
+│   └── actions/              # Server Actions: auth, applications, profile, tasks
 ├── components/
 │   ├── homepage/             # Landing page sections
 │   ├── ui.tsx                # Form fields, buttons and messages
@@ -163,6 +166,7 @@ careerflow-frontend/
 | `/applications/new`       | Add an application                  | Signed in |
 | `/applications/[id]`      | Application details                 | Signed in |
 | `/applications/[id]/edit` | Edit an application                 | Signed in |
+| `/tasks`                  | Tasks, progress stats and filters   | Signed in |
 | `/profile`                | View and edit your profile          | Signed in |
 | `/settings`               | Account settings                    | Signed in |
 

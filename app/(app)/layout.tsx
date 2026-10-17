@@ -1,6 +1,6 @@
-import { logout } from "@/app/actions/auth";
 import { Logo } from "@/components/logo";
 import { NavLinks } from "@/components/nav-links";
+import { UserMenu } from "@/components/user-menu";
 import { getProfile } from "@/lib/dal";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -14,17 +14,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             <Logo href="/dashboard" />
             <NavLinks />
           </div>
-          <div className="flex items-center gap-3">
-            <span className="hidden text-sm text-zinc-600 sm:inline dark:text-zinc-400">{profile.user.fullName}</span>
-            <form action={logout}>
-              <button
-                type="submit"
-                className="rounded-md px-3 py-1.5 text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
-              >
-                Log out
-              </button>
-            </form>
-          </div>
+          <UserMenu fullName={profile.user.fullName} email={profile.user.email} />
         </div>
       </header>
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">{children}</main>

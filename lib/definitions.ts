@@ -3,6 +3,10 @@
 export const APPLICATION_STATUSES = ["PENDING", "INTERVIEW", "ACCEPTED", "REJECTED"] as const;
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
 
+// Tasks move PENDING -> REVIEW -> DONE; REVIEW can also go back to PENDING. DONE is final.
+export const TASK_STATUSES = ["PENDING", "REVIEW", "DONE"] as const;
+export type TaskStatus = (typeof TASK_STATUSES)[number];
+
 export const GENDERS = ["MALE", "FEMALE", "OTHER"] as const;
 export type Gender = (typeof GENDERS)[number];
 
@@ -20,6 +24,28 @@ export interface Application {
   status: ApplicationStatus;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Task {
+  id: string;
+  title: string;
+  description: string | null;
+  deadline: string;
+  status: TaskStatus;
+  completedAt: string | null;
+  reviewedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TaskStats {
+  total: number;
+  byStatus: Record<TaskStatus, number>;
+  overdue: number;
+  completedOnTime: number;
+  completedLate: number;
+  completionRate: number;
+  onTimeRate: number;
 }
 
 export interface Profile {

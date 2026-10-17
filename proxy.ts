@@ -9,7 +9,7 @@ import {
   requestNewAccessToken,
 } from "@/lib/tokens";
 
-const protectedPrefixes = ["/dashboard", "/applications", "/profile", "/settings"];
+const protectedPrefixes = ["/dashboard", "/applications", "/tasks", "/profile", "/settings"];
 const authRoutes = ["/login", "/register"];
 
 // Optimistic auth: decides redirects from cookies alone and silently renews an expired

@@ -25,6 +25,13 @@ export function toIsoDate(value: string | null) {
   return isNaN(date.getTime()) ? value : date.toISOString();
 }
 
+// Deadlines are due by the end of the chosen day, so finishing on that day still counts as on time
+export function toEndOfDayIso(value: string | null) {
+  if (!value) return value;
+  const date = new Date(`${value}T23:59:59.999Z`);
+  return isNaN(date.getTime()) ? value : date.toISOString();
+}
+
 export function toDateInputValue(iso: string | null | undefined) {
   return iso ? iso.slice(0, 10) : "";
 }

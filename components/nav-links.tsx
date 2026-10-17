@@ -5,8 +5,7 @@ import { usePathname } from "next/navigation";
 
 const links = [
   { href: "/dashboard", label: "Applications", match: ["/dashboard", "/applications"] },
-  { href: "/profile", label: "Profile", match: ["/profile"] },
-  { href: "/settings", label: "Settings", match: ["/settings"] },
+  { href: "/tasks", label: "Tasks", match: ["/tasks"] },
 ];
 
 export function NavLinks() {

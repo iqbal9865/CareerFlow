@@ -15,7 +15,7 @@ export function Field({
 }: { label: string; name: string; hint?: ReactNode } & ComponentProps<"input">) {
   return (
     <div className={className}>
-      <label htmlFor={name} className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+      <label htmlFor={props.id ?? name} className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
         {label}
       </label>
       <input id={name} name={name} className={inputClass} {...props} />
@@ -27,7 +27,7 @@ export function Field({
 export function TextArea({ label, name, className, ...props }: { label: string; name: string } & ComponentProps<"textarea">) {
   return (
     <div className={className}>
-      <label htmlFor={name} className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+      <label htmlFor={props.id ?? name} className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
         {label}
       </label>
       <textarea id={name} name={name} rows={4} className={inputClass} {...props} />
@@ -44,7 +44,7 @@ export function Select({
 }: { label: string; name: string; options: readonly { value: string; label: string }[] } & ComponentProps<"select">) {
   return (
     <div className={className}>
-      <label htmlFor={name} className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+      <label htmlFor={props.id ?? name} className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
         {label}
       </label>
       <select id={name} name={name} className={inputClass} {...props}>
