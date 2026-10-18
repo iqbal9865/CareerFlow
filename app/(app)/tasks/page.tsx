@@ -10,7 +10,6 @@ function isTaskStatus(value: string | undefined): value is TaskStatus {
   return TASK_STATUSES.includes(value as TaskStatus);
 }
 
-// Same rule as the backend's overdue stat. The page renders per request, so "now" is the request time.
 function isOverdue(task: Task) {
   return task.status === "PENDING" && new Date(task.deadline).getTime() < Date.now();
 }
@@ -19,7 +18,9 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
   const { status } = await searchParams;
   const [tasks, stats] = await Promise.all([getTasks(), getTaskStats()]);
 
-  const filtered = isTaskStatus(status) ? tasks.filter((t) => t.status === status) : tasks;
+  const groups = (isTaskStatus(status) ? [status] : TASK_STATUSES)
+    .map((s) => ({ status: s, items: tasks.filter((t) => t.status === s) }))
+    .filter((g) => g.items.length > 0);
   const filterHref = (s?: TaskStatus) => (s ? `/tasks?status=${s}` : "/tasks");
 
   return (
@@ -63,14 +64,29 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">No tasks yet</h2>
           <p className="mt-1 text-sm text-zinc-500">Add a task to plan your next steps.</p>
         </div>
-      ) : filtered.length === 0 ? (
+      ) : groups.length === 0 ? (
         <p className="py-12 text-center text-sm text-zinc-500">No tasks with this status.</p>
       ) : (
-        <ul className="divide-y divide-zinc-100 overflow-hidden rounded-2xl border border-zinc-200 bg-white dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900">
-          {filtered.map((t) => (
-            <TaskItem key={t.id} task={t} overdue={isOverdue(t)} />
+        <div className="space-y-8">
+          {groups.map((g) => (
+            <section key={g.status} aria-labelledby={`tasks-${g.status}`} className="space-y-3">
+              <h2
+                id={`tasks-${g.status}`}
+                className="flex items-center gap-2 text-lg font-semibold text-zinc-900 dark:text-white"
+              >
+                {TASK_STATUS_LABELS[g.status]}
+                <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+                  {g.items.length}
+                </span>
+              </h2>
+              <ul className="divide-y divide-zinc-100 overflow-hidden rounded-2xl border border-zinc-200 bg-white dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900">
+                {g.items.map((t) => (
+                  <TaskItem key={t.id} task={t} overdue={isOverdue(t)} />
+                ))}
+              </ul>
+            </section>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
