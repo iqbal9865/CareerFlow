@@ -51,6 +51,13 @@ export default async function ApplicationPage({ params }: { params: Promise<{ id
           <Detail label="Follow up on" value={a.followUpAt && formatDate(a.followUpAt)} />
         </dl>
 
+        {a.status === "REJECTED" && (
+          <div className="mt-6 border-t border-zinc-100 pt-6 dark:border-zinc-800">
+            <h2 className="text-sm font-medium text-zinc-500">Rejection reason</h2>
+            <p className="mt-2 whitespace-pre-wrap text-sm text-zinc-800 dark:text-zinc-200">{a.rejectionReason}</p>
+          </div>
+        )}
+
         {a.notes && (
           <div className="mt-6 border-t border-zinc-100 pt-6 dark:border-zinc-800">
             <h2 className="text-sm font-medium text-zinc-500">Notes</h2>

@@ -23,10 +23,11 @@ export async function proxy(request: NextRequest) {
   const refreshToken = request.cookies.get(REFRESH_COOKIE)?.value;
 
   let renewedToken: string | null = null;
-  let refreshFailed = false;
+  let refreshRejected = false;
   if (!isTokenFresh(accessToken) && refreshToken) {
-    renewedToken = await requestNewAccessToken(refreshToken);
-    refreshFailed = !renewedToken;
+    const result = await requestNewAccessToken(refreshToken);
+    renewedToken = result.accessToken;
+    refreshRejected = "rejected" in result && result.rejected;
   }
 
   const isAuthenticated = isTokenFresh(accessToken) || !!renewedToken;
@@ -48,7 +49,8 @@ export async function proxy(request: NextRequest) {
 
   if (renewedToken) {
     response.cookies.set(ACCESS_COOKIE, renewedToken, { ...cookieOptions, maxAge: accessCookieMaxAge(renewedToken) });
-  } else if (refreshFailed) {
+  } else if (refreshRejected) {
+    // Keep the refresh token when the backend was merely unreachable so the next request can retry
     response.cookies.delete(ACCESS_COOKIE);
     response.cookies.delete(REFRESH_COOKIE);
   }

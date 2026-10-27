@@ -22,6 +22,8 @@ export interface Application {
   appliedAt: string;
   followUpAt: string | null;
   status: ApplicationStatus;
+  // Only set while status is REJECTED; the backend clears it when the status changes
+  rejectionReason: string | null;
   createdAt: string;
   updatedAt: string;
 }

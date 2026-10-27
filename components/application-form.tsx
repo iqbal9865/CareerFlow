@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { Field, FormMessage, Select, SubmitButton, TextArea, useFormAction } from "@/components/ui";
 import { STATUS_LABELS } from "@/components/status-badge";
-import { APPLICATION_STATUSES, type Application, type FormState } from "@/lib/definitions";
+import { APPLICATION_STATUSES, type Application, type ApplicationStatus, type FormState } from "@/lib/definitions";
 import { toDateInputValue } from "@/lib/form";
 
 const statusOptions = APPLICATION_STATUSES.map((s) => ({ value: s, label: STATUS_LABELS[s] }));
@@ -19,6 +20,8 @@ export function ApplicationForm({
 }) {
   const { state, pending, onSubmit } = useFormAction(action);
   const today = new Date().toISOString().slice(0, 10);
+  // Controlled so the rejection reason field can follow the selected status
+  const [status, setStatus] = useState<ApplicationStatus>(application?.status ?? "PENDING");
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
@@ -38,8 +41,24 @@ export function ApplicationForm({
           defaultValue={application ? toDateInputValue(application.appliedAt) : today}
         />
         <Field label="Follow up on" name="followUpAt" type="date" defaultValue={toDateInputValue(application?.followUpAt)} />
-        <Select label="Status" name="status" options={statusOptions} defaultValue={application?.status ?? "PENDING"} />
+        <Select
+          label="Status"
+          name="status"
+          options={statusOptions}
+          value={status}
+          onChange={(e) => setStatus(e.target.value as ApplicationStatus)}
+        />
       </div>
+
+      {status === "REJECTED" && (
+        <TextArea
+          label="Rejection reason"
+          name="rejectionReason"
+          rows={3}
+          placeholder="Went with a more senior candidate…"
+          defaultValue={application?.rejectionReason ?? ""}
+        />
+      )}
 
       <TextArea label="Notes" name="notes" defaultValue={application?.notes ?? ""} />
 

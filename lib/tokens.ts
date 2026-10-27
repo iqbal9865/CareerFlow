@@ -37,7 +37,11 @@ export const cookieOptions = {
   path: "/",
 };
 
-export async function requestNewAccessToken(refreshToken: string): Promise<string | null> {
+// `rejected` means the backend refused the refresh token, so the session is truly over.
+// Anything else (backend down or restarting, 5xx) is transient and must not log the user out.
+export type RefreshResult = { accessToken: string } | { accessToken: null; rejected: boolean };
+
+export async function requestNewAccessToken(refreshToken: string): Promise<RefreshResult> {
   try {
     const res = await fetch(`${BACKEND_API_URL}/auth/refresh`, {
       method: "POST",
@@ -45,10 +49,10 @@ export async function requestNewAccessToken(refreshToken: string): Promise<strin
       body: JSON.stringify({ refreshToken }),
       cache: "no-store",
     });
-    if (!res.ok) return null;
+    if (!res.ok) return { accessToken: null, rejected: res.status >= 400 && res.status < 500 };
     const body = (await res.json()) as { accessToken?: string };
-    return body.accessToken ?? null;
+    return body.accessToken ? { accessToken: body.accessToken } : { accessToken: null, rejected: false };
   } catch {
-    return null;
+    return { accessToken: null, rejected: false };
   }
 }
