@@ -1,5 +1,17 @@
 // Helpers for turning FormData into backend payloads
 
+// True when value is an https URL on host or one of its subdomains (e.g. www.linkedin.com).
+// Parsing the URL rejects lookalikes such as https://linkedin.com.evil.site.
+// Mirrors isHttpsUrlOnHost in careerflow-backend/src/validators/profile.validator.ts — keep them in sync
+export function isHttpsUrlOnHost(value: string, host: string): boolean {
+  try {
+    const { protocol, hostname } = new URL(value);
+    return protocol === "https:" && (hostname === host || hostname.endsWith(`.${host}`));
+  } catch {
+    return false;
+  }
+}
+
 export function readString(formData: FormData, key: string): string | null {
   const value = formData.get(key);
   return typeof value === "string" && value.trim() ? value.trim() : null;

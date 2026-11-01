@@ -2,7 +2,7 @@
 
 import { refresh } from "next/cache";
 import { apiFetch, ApiError } from "@/lib/api";
-import { readOptionalFields, readString, toIsoDate } from "@/lib/form";
+import { isHttpsUrlOnHost, readOptionalFields, readString, toIsoDate } from "@/lib/form";
 import type { FormState } from "@/lib/definitions";
 
 const PROFILE_FIELDS = [
@@ -34,6 +34,13 @@ export async function updateProfile(_state: FormState, formData: FormData): Prom
   // Blank fields are sent as null so users can clear them
   const payload = readOptionalFields(formData, PROFILE_FIELDS);
   payload.dateOfBirth = toIsoDate(payload.dateOfBirth);
+  // Same rules and messages as the backend validator, checked here to skip a round trip
+  if (payload.linkedinUrl && !isHttpsUrlOnHost(payload.linkedinUrl, "linkedin.com")) {
+    return { error: "Invalid LinkedIn URL" };
+  }
+  if (payload.githubUrl && !isHttpsUrlOnHost(payload.githubUrl, "github.com")) {
+    return { error: "Invalid GitHub URL" };
+  }
   return submit("/profile", "PUT", payload, "Profile updated");
 }
 
