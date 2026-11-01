@@ -25,7 +25,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
         <Field label="City" name="city" defaultValue={profile.city ?? ""} />
         <Field label="Country" name="country" defaultValue={profile.country ?? ""} />
         <Field label="Portfolio" name="portfolioUrl" type="url" placeholder="https://" defaultValue={profile.portfolioUrl ?? ""} />
-        <Field label="LinkedIn" name="linkedinUrl" type="url" placeholder="https://www.linkedin.com/in/…" defaultValue={profile.linkedinUrl ?? ""} />
+        <Field label="LinkedIn" name="linkedinUrl" type="text" inputMode="url" placeholder="https://www.linkedin.com/in/…" defaultValue={profile.linkedinUrl ?? ""} />
         <Field label="GitHub" name="githubUrl" type="url" placeholder="https://github.com/…" defaultValue={profile.githubUrl ?? ""} />
       </div>
       <SubmitButton pending={pending}>Save profile</SubmitButton>

@@ -35,9 +35,6 @@ export async function updateProfile(_state: FormState, formData: FormData): Prom
   const payload = readOptionalFields(formData, PROFILE_FIELDS);
   payload.dateOfBirth = toIsoDate(payload.dateOfBirth);
   // Same rules and messages as the backend validator, checked here to skip a round trip
-  if (payload.linkedinUrl && !isHttpsUrlOnHost(payload.linkedinUrl, "linkedin.com")) {
-    return { error: "Invalid LinkedIn URL" };
-  }
   if (payload.githubUrl && !isHttpsUrlOnHost(payload.githubUrl, "github.com")) {
     return { error: "Invalid GitHub URL" };
   }
